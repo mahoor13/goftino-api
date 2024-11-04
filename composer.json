@@ -1,0 +1,20 @@
+{
+    "name": "mahoor13/goftino-laravel-api",
+    "description": "A composer package compatible with Laravel for Goftino API https://api.goftino.com/",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^7.9"
+    },
+    "license": "GPL-3.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Mahoor13\\GoftinoLaravelApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "mahoor13",
+            "email": "mahoor13@gmail.com"
+        }
+    ]
+}
