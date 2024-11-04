@@ -9,7 +9,6 @@ class GoftinoApiTest extends TestCase
 {
     protected $apiKey = 'GOFTINO TEST API KEY'; // Set api key here. But it's better to set GOFTINO_TEST_API_KEY env
     protected $api;
-    protected $clientMock;
 
     protected function setUp(): void
     {
@@ -46,5 +45,26 @@ class GoftinoApiTest extends TestCase
         $this->assertIsArray($result["data"]["chats"]);
         $this->assertLessThanOrEqual(2, count($result["data"]["chats"]));
         $this->assertEquals(1, $result["data"]["page"]);
+
+        $chatId = $result["data"]["chats"][0]['chat_id'];
+
+        return $chatId;
+    }
+
+    /**
+     * @depends testChatsReturnsExpectedData
+     */
+    public function testChatDataReturnsExpectedData($chatId)
+    {
+        $this->assertNotNull($chatId, 'chat_id is not set from previous test');
+
+        // Call the chats method and set chat_id from testChatsReturnsExpectedData method
+        $result = $this->api->chat_data(chat_id: $chatId);
+
+        // Assert that the result matches the expected response
+        $this->assertIsArray($result);
+        $this->assertEquals("success", $result["status"]);
+        $this->assertIsArray($result["data"]);
+        $this->assertIsArray($result["data"]["messages"]);
     }
 }
