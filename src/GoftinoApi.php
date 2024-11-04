@@ -38,30 +38,53 @@ class GoftinoApi
     }
 
     /**
-     * filter_params
-     *
-     * @param  array $params
-     * @return array
+     * call
+     * 
+     * @param string $api
+     * @param string $request_method
+     * @param array $options
+     * 
+     * @return mixed
      */
-    protected function filter_params(array $params): array
+    public function call(string $api, string $request_method = 'get', array $options = []): mixed
     {
-        return array_filter($params, fn($val) => $val !== null, ARRAY_FILTER_USE_BOTH);
+        $options = array_filter($options, fn($val) => $val !== null, ARRAY_FILTER_USE_BOTH);
+        $response = $request_method === 'get'
+            ? $this->client->get($api, ['query' => $options])
+            : $this->client->post($api, ['json' => $options]);
+
+        return json_decode($response->getBody()->getContents(), true);
     }
 
     /**
+     * chats
+     * 
      * @param int $limit
-     * @param string|null $page
+     * @param int $page
      * @param string|null $operator_id
      * @param string|null $status
      * @param bool|null $has_owner
      * 
      * @return mixed
      */
-    public function chats(int $limit = 50, ?string $page = null, ?string $operator_id = null, string $status = null, ?bool $has_owner = null)
+    public function chats(int $limit = 50, int $page = 1, ?string $operator_id = null, string $status = null, ?bool $has_owner = null)
     {
-        $options = $this->filter_params(compact('limit', 'page', 'operator_id', 'status', 'has_owner'));
-        $response = $this->client->get('chats', ['query' => $options]);
+        return $this->call(__FUNCTION__, 'get', compact('limit', 'page', 'operator_id', 'status', 'has_owner'));
+    }
 
-        return json_decode($response->getBody()->getContents(), true);
+    /**
+     * chat_data
+     *
+     * @param string $chat_id
+     * @param string|null $from_date
+     * @param string|null $to_date
+     * @param int $limit
+     * @param int $page
+     * 
+     * @return mixed
+     */
+    public function chat_data(string $chat_id, ?string $from_date = null, ?string $to_date = null, int $limit = 50, int $page = 1)
+    {
+        return $this->call(__FUNCTION__, 'get', compact('chat_id', 'from_date', 'to_date', 'limit', 'page'));
     }
 }

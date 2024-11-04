@@ -17,20 +17,6 @@ class GoftinoApiTest extends TestCase
         $this->api = new GoftinoApi(getenv('GOFTINO_TEST_API_KEY') ?: $this->apiKey);
     }
 
-    public function testChatsReturnsExpectedData()
-    {
-        // Call the chats method
-        $result = $this->api->chats(limit: 2);
-
-        // Assert that the result matches the expected response
-        $this->assertIsArray($result);
-        $this->assertEquals("success", $result["status"]);
-        $this->assertIsArray($result["data"]);
-        $this->assertIsArray($result["data"]["chats"]);
-        $this->assertLessThanOrEqual(2, count($result["data"]["chats"]));
-        $this->assertEquals(1, $result["data"]["page"]);
-    }
-
     public function testChatsThrowsExceptionOnError()
     {
         // Set an invalid API key to trigger an error response
@@ -46,5 +32,19 @@ class GoftinoApiTest extends TestCase
         $this->assertIsArray($result);
         $this->assertEquals("error", $result["status"]);
         $this->assertEquals("1", $result["code"]);
+    }
+
+    public function testChatsReturnsExpectedData()
+    {
+        // Call the chats method
+        $result = $this->api->chats(limit: 2);
+
+        // Assert that the result matches the expected response
+        $this->assertIsArray($result);
+        $this->assertEquals("success", $result["status"]);
+        $this->assertIsArray($result["data"]);
+        $this->assertIsArray($result["data"]["chats"]);
+        $this->assertLessThanOrEqual(2, count($result["data"]["chats"]));
+        $this->assertEquals(1, $result["data"]["page"]);
     }
 }
